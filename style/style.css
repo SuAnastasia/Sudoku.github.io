@@ -1,4 +1,4 @@
-body{
+*{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -11,10 +11,8 @@ body{
 
 .sudoku-segment {
     border: 1px solid gray;
-    margin: 1px;
-    padding: 1px;
-    width: calc(100%/3 - 7px);
-    height: calc(100%/3 - 7px);
+    width: calc(100%/3);
+    height: calc(100%/3);
     display: flex;
     flex-wrap: wrap;
 }
@@ -22,36 +20,44 @@ body{
 .sudoku-cell {
     text-align: center;
     font-size: 100%;
-    width: calc(100%/3 - 2px);
-    height: calc(100%/3 - 2px);
+    color: #000 ;
+    width: calc(100%/3);
+    height: calc(100%/3);
     border: none;
     outline: none;
-    padding: 0;
-    margin: 1px;
-    background: #d5fbff;
+    background: #fff;
+    border: 0.2px solid #B8B8B8;
 }
 
 .sudoku-cell.start-cell {
-    color: gray;
+    color: #505050;
 }
 
 .sudoku-cell.supported-cell {
-    background: #b7fecd;
+    background: #F5F5F5;
 }
 
 .sudoku-cell.selected-cell {
-    background: #84f0fc;
+    background: #E0ECF8;
 }
 
 .sudoku-cell.important-cell {
-    color: blue;
+    background: #C8C8C8;
 }
 
 .sudoku-cell.start-cell.error {
-    color: #ed0a0a;
+    background: #F8E0E0;
 }
 
+.supported-cell.selected-cell {
+    color: #000;
+}
 
-.sudoku-cell.error {
-    color: red;
+.sudoku-cell.error{
+    background: #F8E0E0;
+}
+
+.selected-cell.error{
+    color: #DF0101;
+    background: #E0ECF8;
 }
