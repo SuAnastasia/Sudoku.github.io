@@ -1,9 +1,72 @@
+/* общие стили */
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+.wrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.dif-level{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.dif-level_title {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    font-style: oblique;
+    color: #0489B1;
+    margin: 10px;
+}
+
+.dif-level_select-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.dif-level_select {
+    border: 0.5px solid #B8B8B8;
+    border-radius: 5px;
+    width: 200px;
+    margin-right: 20px;
+    padding: 5px;
+    color: #505050;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: oblique;
+    font-size: 14px;
+}
+
+.dif-level_button {
+    margin-left: 20px;
+    padding: 5px;
+    background-color: #F5F5F5;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: oblique;
+    font-size: 15px;
+    color: #505050;
+    border: 1px solid #B8B8B8;
+    border-radius: 5px;
+}
+
+.dif-level_button:active {
+    border-color: #505050;
+    background: #cbddf0;
+}
+.dif-level_button:hover {
+    background: #E0ECF8;
+}
+/* стили для сетки судоку */
 .sudoku-game {
     display: flex;
     flex-wrap: wrap;
@@ -26,7 +89,7 @@
     border: none;
     outline: none;
     background: #fff;
-    border: 0.2px solid #B8B8B8;
+    border: 1px solid #B8B8B8;
 }
 
 .sudoku-cell.start-cell {
@@ -60,4 +123,53 @@
 .selected-cell.error{
     color: #DF0101;
     background: #E0ECF8;
+}
+
+/*стили модального окна*/
+
+.modal-wrapper {
+    position: absolute;
+    z-index: 80;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.637);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    ;
+}
+
+.modal-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 88;
+    padding: 60px 40px;
+    background-color: #fff;
+    border: 1px solid #B8B8B8;
+    border-radius: 5px
+}
+
+.modal-box_title {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    font-style: oblique;
+    color: #0489B1;
+    margin-bottom: 20px;
+}
+
+.modal-box_button {
+    padding: 10px;
+    background-color: #F5F5F5;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: oblique;
+    font-size: 15px;
+    color: #505050;
+    border: 1px solid #B8B8B8;
+    border-radius: 5px;
+}
+.modal-box_button:active{
+    border-color: #505050;
+    background: #cbddf0;
 }

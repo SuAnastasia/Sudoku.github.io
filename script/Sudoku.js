@@ -27,6 +27,69 @@ class Sudoku {
         }
     }
 
+    static getFreeCell (sudoku) {
+        const cells = sudoku.body.filter(x => !x.number)
+        const index = Math.floor(Math.random() * cells.length)
+
+        return cells[index]
+    }
+
+    static getBusyCell (sudoku) {
+        const cells = sudoku.body.filter(x => x.number)
+        const index = Math.floor(Math.random() * cells.length)
+
+        return cells[index]
+    }
+
+    static generate (n) {
+        n = Math.min(81, Math.max(n, 0))
+
+        const w = new Sudoku
+        for (let i = 1; i <= 9; i++) {
+            const freeCell = Sudoku.getFreeCell(w)
+            freeCell.number = i
+        }
+
+        const s = w.solve()
+        
+        for (let i = 0; i < 81 - n; i++) {
+            const busyCell = Sudoku.getBusyCell(s)
+            busyCell.number = 0
+        }
+
+        return new Sudoku(s.body.map(x => x.number).join(''))
+        
+    }
+
+
+    get isSolved () {
+        for (const cell of this.body) {
+            if (cell.number === 0) {
+                return false
+            }
+        }
+
+        for (let i = 0; i < 9; i++) {
+            const row = this.getRow(i).map(x => x.number)
+            const column = this.getColumn(i).map(x => x.number)
+            const segment = this.getSegment(i).map(x => x.number)
+            
+            for (let n = 1; n <= 9; n++) {
+                if (!row.includes(n) && !column.includes(n) && !segment.includes(n)) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    getCopy () {
+        return new Sudoku(
+            this.body.map(x => x.number).join('')
+        )
+
+    }
+
     getRow (n) {
         const row = []
 
@@ -65,6 +128,7 @@ class Sudoku {
     }
 
     keydownHandler(event, cell){
+        event.preventDefault()
         if (!cell.started){
             if ('123456789'.includes(event.key)) {
                 cell.number = parseInt(event.key)
@@ -85,7 +149,7 @@ class Sudoku {
                         cell.error = true
                     }
                 }
-
+                
                 for (const item of this.getColumn(cell.x)){
                     if (cell === item) {
                         continue
@@ -103,6 +167,7 @@ class Sudoku {
                     }
 
                     if (item.number === cell.number) {
+
                         item.error = true
                         cell.error = true
                     }
@@ -125,11 +190,15 @@ class Sudoku {
                 }
             }
         }
-        event.preventDefault()
+        
         this.viewUpdate()
+        this.check()
     }
 
+
+
     focusHandler(event, cell) {
+        event.preventDefault()
         cell.selected = true
 
         for (const item of this.getRow(cell.y)){
@@ -152,6 +221,7 @@ class Sudoku {
     }
 
     blurHandler(event, cell) {
+        event.preventDefault()
         cell.selected = false
 
         if (cell.error) {
@@ -179,6 +249,7 @@ class Sudoku {
 
             if (cell.started) {
                 inputElement.classList.add('start-cell')
+                inputElement.setAttribute('readonly','readonly')
             }
 
             cell.element = inputElement
@@ -206,6 +277,7 @@ class Sudoku {
         return rootElement
     }
 
+
     viewUpdate() {
         for (const cell of this.body) {
             cell.element.classList.remove('error', 'important-cell', 'supported-cell', 'selected-cell')
@@ -228,4 +300,99 @@ class Sudoku {
             }
         }
     }
+
+    getPotentials () {
+        const potentials = []
+
+        for (const cell of this.body) {
+            if (cell.number){
+                potentials.push(cell.number)
+            }
+            else {
+                const rowNumbers = this.getRow(cell.y).map(x => x.number)
+                const columnNumbers = this.getColumn(cell.x).map(x => x.number)
+                const segmentNumbers = this.getSegment(cell.s).map(x => x.number) 
+
+                const alphabet = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                potentials.push(
+                    alphabet
+                        .filter(x => !rowNumbers.includes(x))
+                        .filter(x => !columnNumbers.includes(x))
+                        .filter(x => !segmentNumbers.includes(x))
+                )
+            }
+            
+        }
+
+        return potentials
+    }
+
+    solve () {
+        const copy = this.getCopy()
+        let flag = true
+
+        while(flag) {
+            flag = false
+            const potentials = copy.getPotentials()
+            
+            for (let i = 0; i < 81; i++) {
+                const potential = potentials[i]
+    
+                if (potential instanceof Array && potential.length === 1) {
+                    copy.body[i].number = potential[0]
+                    flag = true
+                }
+            }
+        } 
+
+        const potentials = copy.getPotentials()
+
+       
+        for (let power = 2; power <= 9; power++) {
+            for (let i = 0; i < 81;  i++) {
+                if (potentials[i].length === power) {
+                    for (const value of potentials[i]) {
+                        const nextCopy = copy.getCopy()
+                        nextCopy.body[i].number = value
+
+                        const resultCopy = nextCopy.solve()
+                        if (resultCopy.isSolved) {
+                            return resultCopy
+                        }
+                    }
+                   
+                }
+            }
+        }
+
+        return copy
+    }
+
+
+    // Функция check() предназначена для проверки окончания иры
+    // ========================================================
+    // Описание переменных функции
+    // ---------------------------
+    // Локальные переменные
+    // count: счетчик правильно заполненных ячеек
+    // cell: параметр цикла (for)
+    // --------------------------
+    // Результат работы функции
+    // построение DOM-элементов об окончании иры
+
+    check() {
+        let count = 0
+        for (const cell of this.body) {
+            if (cell.error === false && cell.number != 0) {
+                count++
+            }
+        }
+
+        if (count === 81) {
+           document.querySelector('.modal-wrapper').style.display = "flex"
+        }
+    }
 }
+
+
+

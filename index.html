@@ -9,7 +9,30 @@
     <title>Sudoku</title>
 </head>
 <body>
-    <div id="app"></div>
+    <div class="wrapper">
+        <div class="dif-level">
+            <p class="dif-level_title">Выберите уровень сложности:</p>
+            <div class="dif-level_select-box">
+                <select class="dif-level_select">
+                    <option value="45" selected>Лёгкий</option>
+                    <option value="38">Средний</option>
+                    <option value="30">Сложный</option>
+                </select>
+                <button class="dif-level_button">
+                    Cгенерировать
+                </button>
+            </div>
+        </div>
+        <div id="app"></div>
+        <div class="modal-wrapper">
+            <div class="modal-box">
+                <p class="modal-box_title">Головоломка успешно собрана!</p>
+                <button class="modal-box_button">
+                    Перезапустить
+                </button>
+            </div>
+        </div>
+    </div>
     <script src="script/Sudoku.js"></script>
     <script src="script/script.js"></script>
 </body>
