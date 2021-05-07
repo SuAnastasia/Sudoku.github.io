@@ -27,69 +27,19 @@ class Sudoku {
         }
     }
 
-    static getFreeCell (sudoku) {
-        const cells = sudoku.body.filter(x => !x.number)
-        const index = Math.floor(Math.random() * cells.length)
 
-        return cells[index]
-    }
-
-    static getBusyCell (sudoku) {
-        const cells = sudoku.body.filter(x => x.number)
-        const index = Math.floor(Math.random() * cells.length)
-
-        return cells[index]
-    }
-
-    static generate (n) {
-        n = Math.min(81, Math.max(n, 0))
-
-        const w = new Sudoku
-        for (let i = 1; i <= 9; i++) {
-            const freeCell = Sudoku.getFreeCell(w)
-            freeCell.number = i
-        }
-
-        const s = w.solve()
-        
-        for (let i = 0; i < 81 - n; i++) {
-            const busyCell = Sudoku.getBusyCell(s)
-            busyCell.number = 0
-        }
-
-        return new Sudoku(s.body.map(x => x.number).join(''))
-        
-    }
-
-
-    get isSolved () {
-        for (const cell of this.body) {
-            if (cell.number === 0) {
-                return false
-            }
-        }
-
-        for (let i = 0; i < 9; i++) {
-            const row = this.getRow(i).map(x => x.number)
-            const column = this.getColumn(i).map(x => x.number)
-            const segment = this.getSegment(i).map(x => x.number)
-            
-            for (let n = 1; n <= 9; n++) {
-                if (!row.includes(n) && !column.includes(n) && !segment.includes(n)) {
-                    return false
-                }
-            }
-        }
-        return true
-    }
-
-    getCopy () {
-        return new Sudoku(
-            this.body.map(x => x.number).join('')
-        )
-
-    }
-
+    // Функция getRow() предназначена для создания массива из ячеек строки
+    // ========================================================
+    // Описание переменных функции
+    // ---------------------------
+    // Формальные параметры функции
+    // n: номер строки (int)
+    // Локальные переменные
+    // i: параметр цикла (for)
+    // row: массив ячеек одной строки (list)
+    // --------------------------
+    // Результат работы функции
+    // row: массив ячеек одной строки (list)
     getRow (n) {
         const row = []
 
@@ -100,6 +50,19 @@ class Sudoku {
         return row
     }
 
+
+    // Функция getColumn() предназначена для создания массива из ячеек столбца
+    // ========================================================
+    // Описание переменных функции
+    // ---------------------------
+    // Формальные параметры функции
+    // n: номер колонки (int)
+    // Локальные переменные
+    // column: массив ячеек одной колонки (list)
+    // i: параметр цикла (for)
+    // --------------------------
+    // Результат работы функции
+    // column: массив ячеек одной колонки (list)
     getColumn (n) {
         const column = []
 
@@ -110,6 +73,20 @@ class Sudoku {
         return column
     }
 
+
+    // Функция getSegment() предназначена для создания массива из ячеек сегмента
+    // ========================================================
+    // Описание переменных функции
+    // ---------------------------
+    // Формальные параметры функции
+    // n: номер сегмента (int)
+    // Локальные переменные
+    // segment: массив ячеек одного сегмента (list)
+    // dx: параметр цикла (for)
+    // dy: параметр цикла (for)
+    // --------------------------
+    // Результат работы функции
+    // segment: массив ячеек одного сегмента (list)
     getSegment (n) {
         const segment = []
 
@@ -127,6 +104,18 @@ class Sudoku {
         return segment
     }
 
+    // Функция keydownHandler() предназначена для изменения параметров ячеек при введения значения в ячейку
+    // ========================================================
+    // Описание переменных функции
+    // ---------------------------
+    // Формальные параметры функции
+    // event: событие (obj)
+    // cell: ячейка судоку (obj)
+    // Локальные переменные
+    // item: параметр цикла (for)
+    // --------------------------
+    // Результат работы функции
+    // изменение параметров ячеек
     keydownHandler(event, cell){
         event.preventDefault()
         if (!cell.started){
@@ -196,7 +185,18 @@ class Sudoku {
     }
 
 
-
+    // Функция focusHandler() предназначена для обработки ячеек при фокусировке
+    // ========================================================
+    // Описание переменных функции
+    // ---------------------------
+    // Локальные переменные
+    // item: параметр цикла (for)
+    //Формальные параметры функции
+    // event: событие (obj)
+    // cell: ячейка судоку (obj)
+    // --------------------------
+    // Результат работы функции
+    // изменение параметров ячеек 
     focusHandler(event, cell) {
         event.preventDefault()
         cell.selected = true
@@ -220,6 +220,18 @@ class Sudoku {
         this.viewUpdate()
     }
 
+    // Функция blurHandler() предназначена для обработки события после потери фокуса у элемента
+    // ========================================================
+    // Описание переменных функции
+    // ---------------------------
+    //Формальные параметры функции
+    // event: событие (obj)
+    // cell: ячейка судоку (obj)
+    // Локальные переменные
+    // item: параметр цикла (for)
+    // --------------------------
+    // Результат работы функции
+    // изменение параметров ячеек
     blurHandler(event, cell) {
         event.preventDefault()
         cell.selected = false
@@ -237,12 +249,24 @@ class Sudoku {
         this.viewUpdate()
     }
 
+    // Функция getHTML() предназначена для построения сетки судоку
+    // ========================================================
+    // Описание переменных функции
+    // ---------------------------
+    // Формальные параметры функции
+    // size: размер доски судоку (int)
+    // Локальные переменные
+    // cell: параметр цикла (for)
+    // --------------------------
+    // Результат работы функции
+    // построение DOM-элементов об окончании иры
     getHTML (size) {
         for (const cell of this.body) {
             const inputElement = document.createElement('input')
             inputElement.classList.add('sudoku-cell')
             inputElement.setAttribute('type', 'text')
 
+            // отслеживание действий пользователя
             inputElement.addEventListener('keydown', event => this.keydownHandler(event, cell))
             inputElement.addEventListener('focus', event => this.focusHandler(event, cell))
             inputElement.addEventListener('blur', event => this.blurHandler(event, cell))
@@ -277,7 +301,15 @@ class Sudoku {
         return rootElement
     }
 
-
+    // Функция cviewUpdate() предназначена для обновления содержиого экрана
+    // ========================================================
+    // Описание переменных функции
+    // ---------------------------
+    // Локальные переменные
+    // cell: параметр цикла (for)
+    // --------------------------
+    // Результат работы функции
+    // обновление стилей элементов
     viewUpdate() {
         for (const cell of this.body) {
             cell.element.classList.remove('error', 'important-cell', 'supported-cell', 'selected-cell')
@@ -301,80 +333,13 @@ class Sudoku {
         }
     }
 
-    getPotentials () {
-        const potentials = []
-
-        for (const cell of this.body) {
-            if (cell.number){
-                potentials.push(cell.number)
-            }
-            else {
-                const rowNumbers = this.getRow(cell.y).map(x => x.number)
-                const columnNumbers = this.getColumn(cell.x).map(x => x.number)
-                const segmentNumbers = this.getSegment(cell.s).map(x => x.number) 
-
-                const alphabet = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-                potentials.push(
-                    alphabet
-                        .filter(x => !rowNumbers.includes(x))
-                        .filter(x => !columnNumbers.includes(x))
-                        .filter(x => !segmentNumbers.includes(x))
-                )
-            }
-            
-        }
-
-        return potentials
-    }
-
-    solve () {
-        const copy = this.getCopy()
-        let flag = true
-
-        while(flag) {
-            flag = false
-            const potentials = copy.getPotentials()
-            
-            for (let i = 0; i < 81; i++) {
-                const potential = potentials[i]
-    
-                if (potential instanceof Array && potential.length === 1) {
-                    copy.body[i].number = potential[0]
-                    flag = true
-                }
-            }
-        } 
-
-        const potentials = copy.getPotentials()
-
-       
-        for (let power = 2; power <= 9; power++) {
-            for (let i = 0; i < 81;  i++) {
-                if (potentials[i].length === power) {
-                    for (const value of potentials[i]) {
-                        const nextCopy = copy.getCopy()
-                        nextCopy.body[i].number = value
-
-                        const resultCopy = nextCopy.solve()
-                        if (resultCopy.isSolved) {
-                            return resultCopy
-                        }
-                    }
-                   
-                }
-            }
-        }
-
-        return copy
-    }
-
 
     // Функция check() предназначена для проверки окончания иры
     // ========================================================
     // Описание переменных функции
     // ---------------------------
     // Локальные переменные
-    // count: счетчик правильно заполненных ячеек
+    // count: счетчик правильно заполненных ячеек (int)
     // cell: параметр цикла (for)
     // --------------------------
     // Результат работы функции

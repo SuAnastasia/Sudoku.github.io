@@ -1,29 +1,68 @@
-document.addEventListener("DOMContentLoaded", () => {
-    let button = document.querySelector('.dif-level_button')
-    let select = document.querySelector('.dif-level_select')
-    let modalButton = document.querySelector('.modal-box_button')
+// основные переменные 
+let button = document.querySelector('.dif-level_button')
+let select = document.querySelector('.dif-level_select')
+let modalButton = document.querySelector('.modal-box_button')
+let app = document.querySelector('#app')
 
-    let w = Sudoku.generate(select.value)
-    let app = document.querySelector('#app')
+let sudokuGrids  = [
+    ['932 400 060 000 201 895 008 790 304 021 900 500 609 010 732 780 000 016 800 672 450 165 000 070 007 159 603', 
+    '200 506 807 008 030 914 070 849 002 160 003 270 023 970 080 907 600 103 500 020 008 710 000 065 849 065 300',
+    '170 064 300 008 002 415 420 100 086 002 693 570 730 085 009 609 700 038 300 506 940 296 407 800 040 910 603'],
+    ['200 870 510 050 190 028 008 050 003 080 040 006 092 700 380 010 008 045 700 509 802 025 084 000 801 600 000',
+    '792 000 001 000 670 908 058 000 730 304 000 295 900 203 040 207 509 010 003 051 000 540 800 103 000 430 589',
+    '407 002 800 050 140 200 000 708 541 001 200 060 590 300 100 200 081 050 109 000 425 060 429 000 700 015 090'],
+    ['174 020 000 300 007 000 000 094 130 010 036 200 093 000 081 040 900 060 702 050 008 401 000 072 000 001 000',
+    '041 009 000 000 002 017 000 040 890 900 070 040 000 480 609 087 900 300 260 090 000 000 504 780 074 000 001',
+    '608 507 000 590 020 300 000 010 586 000 030 015 010 000 008 300 801 020 000 409 050 005 062 009 940 000 700']
+]
+
+// Функция genSudoku() предназначена выбора рандомного уровня из заданного массива определенной сложности 
+// Описание переменных функции
+// ---------------------------
+// Вормальные переменные
+// sudoku: массив строк (list)
+// --------------------------
+// Результат работы функции
+// построение DOM-элементов об окончании иры
+function genSudoku (sudoku) {
+    return sudoku[Math.floor(Math.random()*sudoku.length)]
+}
+
+let level = genSudoku (sudokuGrids[select.value])
+let w = new Sudoku (level)
+app.append(w.getHTML(550))
+
+// Функция для отслеживания нажатия на кнопку "Сгенерировать"
+// Используемые переменные
+// ----------------------
+// event: событие, генерируемое нажатием (obj)
+// level: строка со значениями ячеек судоку (str)
+// w: экземпляр класса (obj)
+
+button.addEventListener('click', (event) => {
+    event.preventDefault()
+    level = genSudoku (sudokuGrids[select.value])
+
+    w = new Sudoku(level)
+    app.innerHTML = ''
     app.append(w.getHTML(550))
-    
-    button.addEventListener('click', (event) => {
-        event.preventDefault()
-        w = Sudoku.generate(select.value)
-        
-        app.innerHTML = ''
-        app.append(w.getHTML(550))
-    })
-    
-    modalButton.addEventListener('click', () => {
-        document.querySelector('.modal-wrapper').style.display = "none"
-
-        w = Sudoku.generate(select.value)
-
-        app.innerHTML = ''
-        app.append(w.getHTML(550))
-    })
 })
+
+// Функция для отслеживания нажатия на кнопку "Перезапустить"
+// Используемые переменные
+// ----------------------
+// event: событие, генерируемое нажатием (obj)
+// w: экземпляр класса (obj)
+
+modalButton.addEventListener('click', (event) => {
+    event.preventDefault()
+    document.querySelector('.modal-wrapper').style.display = "none"
+
+    w = new Sudoku(level)
+    app.innerHTML = ''
+    app.append(w.getHTML(550))
+})
+
 
 
 
